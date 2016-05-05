@@ -1,0 +1,282 @@
+FORMAT: 1A
+HOST: http://api.tikebit.com/
+
+# Tikebit
+![name](http://tikebit.com/assets/images/tikebit-api-schema.svg)
+Tikebit is a 16 digits long PIN code available in thousand of selling points that allows you to get different cryptocurrencies in ecosystems such as Bitcoin, Ethereum, Voxelus, Augur... A new technological revolution claiming for decentralization has born. It is easier to take part of it with Tikebit. With Tikebit, users can use their cash to get PIN codes redeemable for cryptocurrencies. It's Easy, secure, private and fast. No Banks.
+
+# Group Reseller
+This methods are available for **resellers** accounts.
+
+## Voucher [/reseller/voucher/]
+
+### Create a voucher [POST]
+
+Create a voucher.
+
++ Attributes
+    + username: `usernameReseller` (string, required)
+        Contact with Tikebit if you don't have a reseller account.
+    + password: `passwordReseller` (string, required)
+        Contact with Tikebit if you don't have a reseller account.
+    + currency_iso_code: EUR (string, required)
+        Only ***EUR*** is available at this moment.
+    + reference: `Extra info` (string, required)
+        **Max length:** 250. Extra information for analysis.
+    + description: Extra info (string, required)
+        **Max length:** 250.
+    + amount: `5000` (number, required)
+    
+        **Min:** 100
+        
+        **Max:** 10000
+        
+        The total amount of voucher. In cents.
+
++ Request
+
+        {
+            "username": "UsernameReseller",
+            "password": "PasswordReseller",
+            "currency_iso_code": "EUR",
+            "reference": "RetailStore: 225",
+            "amount": 5000
+        }
+
++ Response 201 (application/json)
+The voucher was created successfully.
+
+    + Body
+
+            {
+                "id": 2448,
+                "serial": "7171BA",
+                "code": "1234123412341234",
+                "amount": 5000,
+                "balance": 5000,
+                "reference": "Extra information",
+                "currency_iso_code": "EUR",
+                "creation_date": 1462470670,
+                "expiration_date": 1494006670
+            }
+        
++ Response 400 (application/json)
+Bad request. Check params. Posible errors:
+    - MISSING: Field is required.
+    - INVALID: Invalid characters.
+    - INVALID: Payment amount is greater than voucher balance.
+    - INVALID: This reference was used before. Reference must be a unique string.
+
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "{FIELD}",
+                        "code": "{CODE}",
+                        "message": "{MESSAGE}"
+                    }
+                ]
+            }
+        
++ Response 403 (application/json)
+Forbidden. Check Auth credentials.
+
+    + Body
+    
+            {
+                "message": "Invalid username/password.",
+                "status": "forbidden"
+            }
+        
++ Response 503 (application/json)
+Service Unavailable. Try later.
+
+    + Body
+    
+            {
+                "status": "service unavailable"
+            }
+        
+
+### Cancel a voucher [DELETE /reseller/voucher/{voucher_code}/]
+
+Cancel a voucher.
+
++ Parameters
+    + voucher_code (required, int) ... Unique 16 digits long PIN code.
+
++ Attributes (object)
+    + username: `usernameReseller` (string, required)
+        Contact with Tikebit if you don't have a reseller account.
+    + password: `passwordReseller` (string, required)
+        Contact with Tikebit if you don't have a reseller account.
+
++ Request
+
+        {
+            "username": "UsernameReseller",
+            "password": "PasswordReseller"
+        }
+
++ Response 204 (application/json)
+The voucher was cancelled successfully.
+
+    + Body
+    
++ Response 400 (application/json)
+Bad request. Check params. Posible errors:
+    - MISSING: Field is required.
+    - INVALID: Invalid characters.
+    - INVALID: Payment amount is greater than voucher balance.
+    - INVALID: This reference was used before. Reference must be a unique string.
+
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "{FIELD}",
+                        "code": "{CODE}",
+                        "message": "{MESSAGE}"
+                    }
+                ]
+            }
+
++ Response 403 (application/json)
+Forbidden. Check Auth credentials.
+
+    + Body
+    
+            {
+                "message": "Invalid username/password.",
+                "status": "forbidden"
+            }
+
++ Response 404 (application/json)
+Not Found. Active voucher not found.
+
+    + Body
+    
+            {
+                "message": "Voucher not found",
+                "status": "not found"
+            }
+
++ Response 503 (application/json)
+Service Unavailable. Try later.
+
+    + Body
+    
+            {
+                "status": "service unavailable"
+            }
+
+
+# Group Merchant
+This methods are available for **merchant** accounts.
+
+## Payment [/merchant/payment/]
+
+### Create a payment [POST]
+
+Create a payment for a voucher.
+
++ Attributes (object)
+    + username: `usernameMerchant` (string, required)
+        Contact with Tikebit if you don't have a merchant account.
+    + password: `passwordMerchant` (string, required)
+        Contact with Tikebit if you don't have a merchant account.
+    + voucher_code: `1234123412341234` (required, string)
+        Unique 16 digits long PIN code.
+    + currency_iso_code: `EUR` (string, required)
+        Only ***EUR*** is available at this moment.
+    + reference: `random123` (string, required)
+        **Max length:** 250. Must be allways a unique string.
+    + description: `Extra info` (string, required)
+        **Max length:** 250.
+    + amount: 5000 (number, required)
+        
+        **Min:** 100
+        
+        **Max:** 10000
+        
+        The total amount of voucher. In cents.
+
++ Request
+
+        {
+            "username": "UsernameMerchant",
+            "password": "PasswordMerchant",
+            "voucher_code": "1234123412341234",
+            "currency_iso_code": "EUR",
+            "reference": "random123",
+            "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
+            "amount": 100
+        }
+
++ Response 201 (application/json)
+The payment was created successfully.
+
+    + Body
+    
+            {
+                "id": 20,
+                "currency_iso_code": "EUR",
+                "reference": "random123",
+                "amount": 100,
+                "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
+                "creation_date": 1462470876
+            }
+    
++ Response 400 (application/json)
+Bad request. Check params. Posible errors:
+    - MISSING: Field is required.
+    - INVALID: Invalid characters.
+    - INVALID: Payment amount is greater than voucher balance.
+    - INVALID: This reference was used before. Reference must be a unique string.
+
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "{FIELD}",
+                        "code": "{CODE}",
+                        "message": "{MESSAGE}"
+                    }
+                ]
+            }
+
+
++ Response 403 (application/json)
+Forbidden. Check Auth credentials.
+
+    + Body
+    
+            {
+                "message": "Invalid username/password.",
+                "status": "forbidden"
+            }
+
++ Response 404 (application/json)
+Not Found. Active voucher not found.
+
+    + Body
+    
+            {
+                "message": "Voucher not found",
+                "status": "not found"
+            }
+            
++ Response 503 (application/json)
+Service Unavailable. Try later.
+
+    + Body
+    
+            {
+                "status": "service unavailable"
+            }
