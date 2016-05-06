@@ -2,7 +2,7 @@ FORMAT: 1A
 HOST: http://api.tikebit.com/v1
 
 # Tikebit
-![name](http://tikebit.com/assets/images/tikebit-api-schema.svg)
+![Tikebit Ecosystem](http://tikebit.com/assets/images/tikebit-api-schema.svg)
 Tikebit is a 16 digits long PIN code available in thousand of selling points that allows you to get different cryptocurrencies in ecosystems such as Bitcoin, Ethereum, Voxelus, Augur... A new technological revolution claiming for decentralization has born. It is easier to take part of it with Tikebit. With Tikebit, users can use their cash to get PIN codes redeemable for cryptocurrencies. It's Easy, secure, private and fast. No Banks.
 
 # Group Reseller
@@ -86,8 +86,17 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "message": "Invalid username/password.",
-                "status": "forbidden"
+                "status": "forbidden",
+                "message": "Invalid username/password."
+            }
+        
++ Response 500 (application/json)
+Internal Server Error. Try later.
+
+    + Body
+    
+            {
+                "status": "internal server error"
             }
         
 + Response 503 (application/json)
@@ -151,8 +160,8 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "message": "Invalid username/password.",
-                "status": "forbidden"
+                "status": "forbidden",
+                "message": "Invalid username/password."
             }
 
 + Response 404 (application/json)
@@ -161,8 +170,17 @@ Not Found. Active voucher not found.
     + Body
     
             {
-                "message": "Voucher not found",
-                "status": "not found"
+                "status": "not found",
+                "message": "Voucher not found"
+            }
+
++ Response 500 (application/json)
+Internal Server Error. Try later.
+
+    + Body
+    
+            {
+                "status": "internal server error"
             }
 
 + Response 503 (application/json)
@@ -258,8 +276,8 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "message": "Invalid username/password.",
-                "status": "forbidden"
+                "status": "forbidden",
+                "message": "Invalid username/password."
             }
 
 + Response 404 (application/json)
@@ -268,8 +286,17 @@ Not Found. Active voucher not found.
     + Body
     
             {
-                "message": "Voucher not found",
-                "status": "not found"
+                "status": "not found",
+                "message": "Voucher not found"
+            }
+
++ Response 500 (application/json)
+Internal Server Error. Try later.
+
+    + Body
+    
+            {
+                "status": "internal server error"
             }
             
 + Response 503 (application/json)
