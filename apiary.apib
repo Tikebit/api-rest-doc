@@ -3,7 +3,13 @@ HOST: http://api.tikebit.com/v1
 
 # Tikebit
 ![Tikebit Ecosystem](http://tikebit.com/assets/images/tikebit-api-schema.svg)
-Tikebit is a 16 digits long PIN code available in thousand of selling points that allows you to get different cryptocurrencies in ecosystems such as Bitcoin, Ethereum, Voxelus, Augur... A new technological revolution claiming for decentralization has born. It is easier to take part of it with Tikebit. With Tikebit, users can use their cash to get PIN codes redeemable for cryptocurrencies. It's Easy, secure, private and fast. No Banks.
+**[Tikebit](http://www.tikebit.com)** is a 16 digits long PIN code available in thousand of selling points that allows you to get different cryptocurrencies in ecosystems such as Bitcoin, Ethereum, Voxelus, Augur... A new technological revolution claiming for decentralization has born. It is easier to take part of it with Tikebit. With Tikebit, users can use their cash to get PIN codes redeemable for cryptocurrencies. It's Easy, secure, private and fast. No Banks.
+
+``` schemas 
+Alice->Bob: Hello Bob, how are you?
+Note right of Bob: Bob thinks
+Bob-->Alice: I am good thanks!
+```
 
 # Group Reseller
 This methods are available for **resellers** accounts.
@@ -35,13 +41,39 @@ Create a voucher.
 
 + Request
 
-        {
-            "username": "UsernameReseller",
-            "password": "PasswordReseller",
-            "currency_iso_code": "EUR",
-            "reference": "RetailStore: 225",
-            "amount": 5000
-        }
+    + Body
+        
+            {
+                "username": "UsernameReseller",
+                "password": "PasswordReseller",
+                "currency_iso_code": "EUR",
+                "reference": "RetailStore: 225",
+                "amount": 5000
+            }
+    
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                }
+            }
+
 
 + Response 201 (application/json)
 The voucher was created successfully.
@@ -51,7 +83,7 @@ The voucher was created successfully.
             {
                 "id": 2448,
                 "serial": "7171BA",
-                "code": "1234123412341234",
+                "voucher_code": "1234123412341234",
                 "amount": 5000,
                 "balance": 5000,
                 "reference": "Extra information",
@@ -60,15 +92,50 @@ The voucher was created successfully.
                 "expiration_date": 1494006670
             }
         
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "serial": {
+                        "type": "string"
+                    },
+                    "voucher_code": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "balance": {
+                        "type": "number"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "creation_date": {
+                        "type": "timestamp"
+                    },
+                    "expiration_date": {
+                        "type": "timestamp"
+                    }
+                }
+            }
+        
 + Response 400 (application/json)
 Bad request. Check params. Posible errors:
-    - MISSING: Field is required.
-    - INVALID: Invalid characters.
-    - INVALID: Payment amount is greater than voucher balance.
-    - INVALID: This reference was used before. Reference must be a unique string.
+    
+    code     | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
 
-    + Body
-
+            Example of "Bad request"
             {
                 "status": "validation failed",
                 "errors": [
@@ -79,6 +146,47 @@ Bad request. Check params. Posible errors:
                     }
                 ]
             }
+
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "username",
+                        "code": "MISSING",
+                        "message": "Field is required"
+                    }
+                ]
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         
 + Response 403 (application/json)
 Forbidden. Check Auth credentials.
@@ -87,7 +195,21 @@ Forbidden. Check Auth credentials.
     
             {
                 "status": "forbidden",
-                "message": "Invalid username/password."
+                "message": "Invalid username/password"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
             }
         
 + Response 500 (application/json)
@@ -98,6 +220,17 @@ Internal Server Error. Try later.
             {
                 "status": "internal server error"
             }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            }
         
 + Response 503 (application/json)
 Service Unavailable. Try later.
@@ -106,6 +239,17 @@ Service Unavailable. Try later.
     
             {
                 "status": "service unavailable"
+            }
+    
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
             }
         
 
@@ -124,10 +268,25 @@ Cancel a voucher.
 
 + Request
 
-        {
-            "username": "UsernameReseller",
-            "password": "PasswordReseller"
-        }
+    + Body
+        
+            {
+                "username": "UsernameReseller",
+                "password": "PasswordReseller"
+            }
+
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+            }
 
 + Response 204 (application/json)
 The voucher was cancelled successfully.
@@ -136,13 +295,13 @@ The voucher was cancelled successfully.
     
 + Response 400 (application/json)
 Bad request. Check params. Posible errors:
-    - MISSING: Field is required.
-    - INVALID: Invalid characters.
-    - INVALID: Payment amount is greater than voucher balance.
-    - INVALID: This reference was used before. Reference must be a unique string.
+    
+    code     | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
 
-    + Body
-
+            Example of "Bad request"
             {
                 "status": "validation failed",
                 "errors": [
@@ -154,6 +313,47 @@ Bad request. Check params. Posible errors:
                 ]
             }
 
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "username",
+                        "code": "MISSING",
+                        "message": "Field is required"
+                    }
+                ]
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
 + Response 403 (application/json)
 Forbidden. Check Auth credentials.
 
@@ -161,7 +361,21 @@ Forbidden. Check Auth credentials.
     
             {
                 "status": "forbidden",
-                "message": "Invalid username/password."
+                "message": "Invalid username/password"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
             }
 
 + Response 404 (application/json)
@@ -173,6 +387,20 @@ Not Found. Active voucher not found.
                 "status": "not found",
                 "message": "Voucher not found"
             }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
 
 + Response 500 (application/json)
 Internal Server Error. Try later.
@@ -182,6 +410,17 @@ Internal Server Error. Try later.
             {
                 "status": "internal server error"
             }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            }
 
 + Response 503 (application/json)
 Service Unavailable. Try later.
@@ -190,6 +429,17 @@ Service Unavailable. Try later.
     
             {
                 "status": "service unavailable"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
             }
 
 
@@ -201,6 +451,7 @@ This methods are available for **merchant** accounts.
 ### Create a payment [POST]
 
 Create a payment for a voucher.
+
 
 + Attributes (object)
     + username: `usernameMerchant` (string, required)
@@ -225,15 +476,47 @@ Create a payment for a voucher.
 
 + Request
 
-        {
-            "username": "UsernameMerchant",
-            "password": "PasswordMerchant",
-            "voucher_code": "1234123412341234",
-            "currency_iso_code": "EUR",
-            "reference": "random123",
-            "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
-            "amount": 100
-        }
+    + Body
+    
+            {
+                "username": "UsernameMerchant",
+                "password": "PasswordMerchant",
+                "voucher_code": "1234123412341234",
+                "currency_iso_code": "EUR",
+                "reference": "random123",
+                "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
+                "amount": 100
+            }
+        
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "voucher_code": {
+                        "type": "string"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    }
+                }
+            }        
+        
 
 + Response 201 (application/json)
 The payment was created successfully.
@@ -248,16 +531,44 @@ The payment was created successfully.
                 "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
                 "creation_date": 1462470876
             }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "number"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "creation_date": {
+                        "type": "timestamp"
+                    }
+                }
+            }
     
 + Response 400 (application/json)
 Bad request. Check params. Posible errors:
-    - MISSING: Field is required.
-    - INVALID: Invalid characters.
-    - INVALID: Payment amount is greater than voucher balance.
-    - INVALID: This reference was used before. Reference must be a unique string.
 
-    + Body
+    code     | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
+    INVALID  | Payment amount is greater than voucher balance
+    INVALID  | This reference was used before
 
+            Example of "Bad request"
             {
                 "status": "validation failed",
                 "errors": [
@@ -269,6 +580,47 @@ Bad request. Check params. Posible errors:
                 ]
             }
 
+    + Body
+
+            {
+                "status": "validation failed",
+                "errors": [
+                    {
+                        "field": "username",
+                        "code": "MISSING",
+                        "message": "Field is required"
+                    }
+                ]
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "field": {
+                                    "type": "string"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "message": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
 
 + Response 403 (application/json)
 Forbidden. Check Auth credentials.
@@ -277,7 +629,21 @@ Forbidden. Check Auth credentials.
     
             {
                 "status": "forbidden",
-                "message": "Invalid username/password."
+                "message": "Invalid username/password"
+            }
+
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
             }
 
 + Response 404 (application/json)
@@ -289,6 +655,20 @@ Not Found. Active voucher not found.
                 "status": "not found",
                 "message": "Voucher not found"
             }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
 
 + Response 500 (application/json)
 Internal Server Error. Try later.
@@ -299,6 +679,17 @@ Internal Server Error. Try later.
                 "status": "internal server error"
             }
             
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
+            }
+            
 + Response 503 (application/json)
 Service Unavailable. Try later.
 
@@ -306,4 +697,15 @@ Service Unavailable. Try later.
     
             {
                 "status": "service unavailable"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    }
+                }
             }
