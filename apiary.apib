@@ -248,7 +248,7 @@ Service Unavailable. Try later.
 
 ### Cancel a voucher [DELETE /reseller/voucher/{voucher_code}/]
 
-Cancel a voucher.
+Cancel a voucher. Only can be cancelled until 10 minutes after be created. Useful when a merchant creates a wrong voucher and want cancel it immediately.
 
 + Parameters
     + voucher_code (required, int) ... Unique 16 digits long PIN code.
@@ -477,7 +477,7 @@ Create a payment for a voucher.
                 "voucher_code": "1234123412341234",
                 "currency_iso_code": "EUR",
                 "nonce": "random123",
-                "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
+                "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
                 "amount": 100
             }
         
@@ -521,7 +521,7 @@ The payment was created successfully.
                 "currency_iso_code": "EUR",
                 "nonce": "random123",
                 "amount": 100,
-                "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
+                "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
                 "creation_date": 1462470876
             }
             
