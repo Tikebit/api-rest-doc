@@ -1,15 +1,10 @@
-FORMAT: 1A
+FORMAT: 1Ahttp://docs.tikebit.apiary.io/
 HOST: http://api.tikebit.com/v1
 
 # Tikebit
 ![Tikebit Ecosystem](http://tikebit.com/assets/images/tikebit-api-schema.svg)
 **[Tikebit](http://www.tikebit.com)** is a 16 digits long PIN code available in thousand of selling points that allows you to get different cryptocurrencies in ecosystems such as Bitcoin, Ethereum, Voxelus, Augur... A new technological revolution claiming for decentralization has born. It is easier to take part of it with Tikebit. With Tikebit, users can use their cash to get PIN codes redeemable for cryptocurrencies. It's Easy, secure, private and fast. No Banks.
 
-``` schemas 
-Alice->Bob: Hello Bob, how are you?
-Note right of Bob: Bob thinks
-Bob-->Alice: I am good thanks!
-```
 
 # Group Reseller
 This methods are available for **resellers** accounts.
@@ -27,8 +22,6 @@ Create a voucher.
         Contact with Tikebit if you don't have a reseller account.
     + currency_iso_code: EUR (string, required)
         Only ***EUR*** is available at this moment.
-    + reference: `Extra info` (string, required)
-        **Max length:** 250. Extra information for analysis.
     + description: Extra info (string, required)
         **Max length:** 250.
     + amount: `5000` (number, required)
@@ -47,7 +40,7 @@ Create a voucher.
                 "username": "UsernameReseller",
                 "password": "PasswordReseller",
                 "currency_iso_code": "EUR",
-                "reference": "RetailStore: 225",
+                "description": "RetailStore: 225",
                 "amount": 5000
             }
     
@@ -65,7 +58,7 @@ Create a voucher.
                     "currency_iso_code": {
                         "type": "string"
                     },
-                    "reference": {
+                    "description": {
                         "type": "string"
                     },
                     "amount": {
@@ -86,7 +79,7 @@ The voucher was created successfully.
                 "voucher_code": "1234123412341234",
                 "amount": 5000,
                 "balance": 5000,
-                "reference": "Extra information",
+                "description": "Extra information",
                 "currency_iso_code": "EUR",
                 "creation_date": 1462470670,
                 "expiration_date": 1494006670
@@ -112,7 +105,7 @@ The voucher was created successfully.
                     "balance": {
                         "type": "number"
                     },
-                    "reference": {
+                    "description": {
                         "type": "string"
                     },
                     "currency_iso_code": {
@@ -462,7 +455,7 @@ Create a payment for a voucher.
         Unique 16 digits long PIN code.
     + currency_iso_code: `EUR` (string, required)
         Only ***EUR*** is available at this moment.
-    + reference: `random123` (string, required)
+    + nonce: `random123` (string, required)
         **Max length:** 250. Must be allways a unique string.
     + description: `Extra info` (string, required)
         **Max length:** 250.
@@ -483,7 +476,7 @@ Create a payment for a voucher.
                 "password": "PasswordMerchant",
                 "voucher_code": "1234123412341234",
                 "currency_iso_code": "EUR",
-                "reference": "random123",
+                "nonce": "random123",
                 "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
                 "amount": 100
             }
@@ -505,7 +498,7 @@ Create a payment for a voucher.
                     "currency_iso_code": {
                         "type": "string"
                     },
-                    "reference": {
+                    "nonce": {
                         "type": "string"
                     },
                     "description": {
@@ -526,7 +519,7 @@ The payment was created successfully.
             {
                 "id": 20,
                 "currency_iso_code": "EUR",
-                "reference": "random123",
+                "nonce": "random123",
                 "amount": 100,
                 "description": "Spend for Bitcoin in Bit2Me.com: REF445588",
                 "creation_date": 1462470876
@@ -543,7 +536,7 @@ The payment was created successfully.
                     "currency_iso_code": {
                         "type": "string"
                     },
-                    "reference": {
+                    "nonce": {
                         "type": "string"
                     },
                     "amount": {
