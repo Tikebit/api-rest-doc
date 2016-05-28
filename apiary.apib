@@ -19,10 +19,6 @@ This methods are available for **resellers** accounts.
 Create a voucher.
 
 + Attributes
-    + username: `usernameReseller` (string, required)
-        Contact with Tikebit if you don't have a reseller account.
-    + password: `passwordReseller` (string, required)
-        Contact with Tikebit if you don't have a reseller account.
     + currency_iso_code: EUR (string, required)
         Only ***EUR*** is available at this moment.
     + description: Extra info (string, required)
@@ -43,8 +39,6 @@ Create a voucher.
     + Body
         
             {
-                "username": "UsernameReseller",
-                "password": "PasswordReseller",
                 "currency_iso_code": "EUR",
                 "description": "RetailStore: 225",
                 "amount": 5000
@@ -55,12 +49,6 @@ Create a voucher.
             {
                 "type": "object",
                 "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
                     "currency_iso_code": {
                         "type": "string"
                     },
@@ -263,37 +251,12 @@ Cancel a voucher. It can only be cancelled until 10 minutes after it was created
 + Parameters
     + voucher_code (required, int) ... Unique 16 digits long PIN code.
 
-+ Attributes (object)
-    + username: `usernameReseller` (string, required)
-        Contact with Tikebit if you don't have a reseller account.
-    + password: `passwordReseller` (string, required)
-        Contact with Tikebit if you don't have a reseller account.
-
 + Request
 
     + Headers
 
             Authorization: Basic ABC123
 
-    + Body
-        
-            {
-                "username": "UsernameReseller",
-                "password": "PasswordReseller"
-            }
-
-    + Schema
-    
-            {
-                "type": "object",
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    }
-            }
 
 + Response 204 (application/json)
 The voucher was cancelled successfully.
@@ -465,10 +428,6 @@ Create a payment for a voucher.
 
 
 + Attributes (object)
-    + username: `usernameMerchant` (string, required)
-        Contact with Tikebit if you don't have a merchant account.
-    + password: `passwordMerchant` (string, required)
-        Contact with Tikebit if you don't have a merchant account.
     + voucher_code: `1234123412341234` (required, string)
         Unique 16 digits long PIN code.
     + currency_iso_code: `EUR` (string, required)
@@ -494,8 +453,6 @@ Create a payment for a voucher.
     + Body
     
             {
-                "username": "UsernameMerchant",
-                "password": "PasswordMerchant",
                 "voucher_code": "1234123412341234",
                 "currency_iso_code": "EUR",
                 "nonce": "random123",
@@ -508,12 +465,6 @@ Create a payment for a voucher.
             {
                 "type": "object",
                 "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    },
                     "voucher_code": {
                         "type": "string"
                     },
