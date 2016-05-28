@@ -36,6 +36,9 @@ Create a voucher.
         The total amount of voucher. In cents.
 
 + Request
+    + Headers
+
+            Authorization: Basic ABC123
 
     + Body
         
@@ -184,13 +187,17 @@ Bad request. Check params. Posible errors:
                 }
             }
         
-+ Response 403 (application/json)
++ Response 401 (application/json)
 Forbidden. Check Auth credentials.
+
+    + Headers
+
+            WWW-Authenticate: Basic realm="reseller"
 
     + Body
     
             {
-                "status": "forbidden",
+                "status": "unauthorized",
                 "message": "Invalid username/password"
             }
             
@@ -263,6 +270,10 @@ Cancel a voucher. It can only be cancelled until 10 minutes after it was created
         Contact with Tikebit if you don't have a reseller account.
 
 + Request
+
+    + Headers
+
+            Authorization: Basic ABC123
 
     + Body
         
@@ -350,13 +361,17 @@ Bad request. Check params. Posible errors:
                 }
             }
 
-+ Response 403 (application/json)
++ Response 401 (application/json)
 Forbidden. Check Auth credentials.
+
+    + Headers
+
+            WWW-Authenticate: Basic realm="reseller"
 
     + Body
     
             {
-                "status": "forbidden",
+                "status": "unauthorized",
                 "message": "Invalid username/password"
             }
             
@@ -471,6 +486,10 @@ Create a payment for a voucher.
         The total amount of voucher. In cents.
 
 + Request
+
+    + Headers
+
+            Authorization: Basic ABC123
 
     + Body
     
@@ -618,13 +637,17 @@ Bad request. Check params. Posible errors:
             }
             
 
-+ Response 403 (application/json)
++ Response 401 (application/json)
 Forbidden. Check Auth credentials.
+
+    + Headers
+
+            WWW-Authenticate: Basic realm="merchant"
 
     + Body
     
             {
-                "status": "forbidden",
+                "status": "unauthorized",
                 "message": "Invalid username/password"
             }
 
