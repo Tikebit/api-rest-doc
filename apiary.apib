@@ -68,7 +68,6 @@ The voucher was created successfully.
     + Body
 
             {
-                "id": 2448,
                 "serial": "7171BA",
                 "voucher_code": "1234123412341234",
                 "amount": 5000,
@@ -84,9 +83,6 @@ The voucher was created successfully.
             {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "number"
-                    },
                     "serial": {
                         "type": "string"
                     },
@@ -352,6 +348,30 @@ Forbidden. Check Auth credentials.
                 }
             }
 
++ Response 403 (application/json)
+Forbidden. The voucher was used before and can't be canceled.
+
+    + Body
+    
+            {
+                "status": "forbidden",
+                "message": "Used voucher"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
 + Response 404 (application/json)
 Not Found. Active voucher not found.
 
@@ -490,7 +510,6 @@ The payment was created successfully.
     + Body
     
             {
-                "id": 20,
                 "currency_iso_code": "EUR",
                 "nonce": "random123",
                 "amount": 100,
@@ -503,9 +522,6 @@ The payment was created successfully.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
-                        "type": "number"
-                    },
                     "currency_iso_code": {
                         "type": "string"
                     },
