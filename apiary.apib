@@ -5,7 +5,7 @@ HOST: https://api.tikebit.com/v1
 ![Tikebit™ Ecosystem](https://www.tikebit.com/assets/images/merchants-icon-tikebit-api-schema.svg)
 Get cryptocurrencies in thousand of retail stores!
 
-**[Tikebit™](http://www.tikebit.com)** is a easy and fast way to get cryptocurrencies with cash in thousand of retail stores around the world. Without banks, credit cards, in seconds.
+**[Tikebit™](http://www.tikebit.com)** is an easy and fast way to get cryptocurrencies with cash in thousand of retail stores around the world. Without banks, credit cards, in seconds.
 
 Easy, fast, secure, private.
 
@@ -110,67 +110,6 @@ The voucher was created successfully.
                 }
             }
         
-+ Response 400 (application/json)
-Bad request. Check params. Posible errors:
-    
-    code     | message
-    -------- | --------
-    MISSING  | Field is required
-    INVALID  | Invalid characters
-
-            Example of "Bad request"
-            {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "{FIELD}",
-                        "code": "{CODE}",
-                        "message": "{MESSAGE}"
-                    }
-                ]
-            }
-
-    + Body
-
-            {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "username",
-                        "code": "MISSING",
-                        "message": "Field is required"
-                    }
-                ]
-            }
-            
-    + Schema
-
-            {
-                "type": "object",
-                "properties": {
-                    "status": {
-                        "type": "string"
-                    },
-                    "errors": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "code": {
-                                    "type": "string"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        
 + Response 401 (application/json)
 Forbidden. Check Auth credentials.
 
@@ -181,7 +120,7 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "status": "unauthorized",
+                "code": "Unauthorized",
                 "message": "Invalid username/password"
             }
             
@@ -190,7 +129,36 @@ Forbidden. Check Auth credentials.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        
++ Response 409 (application/json)
+Conflict. Invalid argument.
+
+    reason   | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
+
+    + Body
+    
+            {
+                "code": "InvalidArgument",
+                "message": "{field} ({reason}): {message}"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
                         "type": "string"
                     },
                     "message": {
@@ -200,12 +168,13 @@ Forbidden. Check Auth credentials.
             }
         
 + Response 500 (application/json)
-Internal Server Error. Try later.
+Internal Server Error. Contact with Tikebit.
 
     + Body
     
             {
-                "status": "internal server error"
+                "code": "InternalServerError",
+                "message": "Some critical error has occurred"
             }
             
     + Schema
@@ -213,7 +182,10 @@ Internal Server Error. Try later.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
@@ -225,7 +197,8 @@ Service Unavailable. Try later.
     + Body
     
             {
-                "status": "service unavailable"
+                "code": "ServiceUnavailable",
+                "message": "Service temporarily unavailable"
             }
     
     + Schema
@@ -233,7 +206,10 @@ Service Unavailable. Try later.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
@@ -258,38 +234,20 @@ Cancel a voucher. It can only be cancelled until 10 minutes after it was created
 The voucher was cancelled successfully.
 
     + Body
-    
+            
 + Response 400 (application/json)
-Bad request. Check params. Posible errors:
+Bad request.
+
+    Posible messages            |
+    --------------------------- |
+    The voucher was used        |
     
-    code     | message
-    -------- | --------
-    MISSING  | Field is required
-    INVALID  | Invalid characters
-
-            Example of "Bad request"
-            {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "{FIELD}",
-                        "code": "{CODE}",
-                        "message": "{MESSAGE}"
-                    }
-                ]
-            }
-
+   
     + Body
 
             {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "username",
-                        "code": "MISSING",
-                        "message": "Field is required"
-                    }
-                ]
+                "code": "BadRequest",
+                "message": "{message}"
             }
             
     + Schema
@@ -297,25 +255,11 @@ Bad request. Check params. Posible errors:
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
                         "type": "string"
                     },
-                    "errors": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "code": {
-                                    "type": "string"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                    "message": {
+                        "type": "string"
                     }
                 }
             }
@@ -330,7 +274,7 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "status": "unauthorized",
+                "code": "Unauthorized",
                 "message": "Invalid username/password"
             }
             
@@ -339,31 +283,7 @@ Forbidden. Check Auth credentials.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    }
-                }
-            }
-
-+ Response 403 (application/json)
-Forbidden. The voucher was used before and can't be canceled.
-
-    + Body
-    
-            {
-                "status": "forbidden",
-                "message": "Used voucher"
-            }
-            
-    + Schema
-
-            {
-                "type": "object",
-                "properties": {
-                    "status": {
+                    "code": {
                         "type": "string"
                     },
                     "message": {
@@ -373,13 +293,13 @@ Forbidden. The voucher was used before and can't be canceled.
             }
 
 + Response 404 (application/json)
-Not Found. Active voucher not found.
+Not Found. The voucher code was not found.
 
     + Body
     
             {
-                "status": "not found",
-                "message": "Voucher not found"
+                "code": "NotFound",
+                "message": "The voucher code was not found"
             }
             
     + Schema
@@ -387,7 +307,36 @@ Not Found. Active voucher not found.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 409 (application/json)
+Conflict. Invalid argument.
+
+    reason   | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
+
+    + Body
+    
+            {
+                "code": "InvalidArgument",
+                "message": "{field} ({reason}): {message}"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
                         "type": "string"
                     },
                     "message": {
@@ -397,12 +346,13 @@ Not Found. Active voucher not found.
             }
 
 + Response 500 (application/json)
-Internal Server Error. Try later.
+Internal Server Error. Contact with Tikebit.
 
     + Body
     
             {
-                "status": "internal server error"
+                "code": "InternalServerError",
+                "message": "Some critical error has occurred"
             }
             
     + Schema
@@ -410,27 +360,34 @@ Internal Server Error. Try later.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
             }
-
+        
 + Response 503 (application/json)
 Service Unavailable. Try later.
 
     + Body
     
             {
-                "status": "service unavailable"
+                "code": "ServiceUnavailable",
+                "message": "Service temporarily unavailable"
             }
-            
+    
     + Schema
 
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
@@ -539,40 +496,20 @@ The payment was created successfully.
                     }
                 }
             }
-    
+
 + Response 400 (application/json)
-Bad request. Check params. Posible errors:
+Bad request.
 
-    code     | message
-    -------- | --------
-    MISSING  | Field is required
-    INVALID  | Invalid characters
-    INVALID  | Payment amount is greater than voucher balance
-    INVALID  | This reference was used before
-
-            Example of "Bad request"
-            {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "{FIELD}",
-                        "code": "{CODE}",
-                        "message": "{MESSAGE}"
-                    }
-                ]
-            }
-
+    Posible messages             |
+    -----------------------------|
+    The nonce was used before    |
+    Not enough voucher balance   | 
+   
     + Body
 
             {
-                "status": "validation failed",
-                "errors": [
-                    {
-                        "field": "username",
-                        "code": "MISSING",
-                        "message": "Field is required"
-                    }
-                ]
+                "code": "BadRequest",
+                "message": "{message}"
             }
             
     + Schema
@@ -580,29 +517,14 @@ Bad request. Check params. Posible errors:
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
                         "type": "string"
                     },
-                    "errors": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "field": {
-                                    "type": "string"
-                                },
-                                "code": {
-                                    "type": "string"
-                                },
-                                "message": {
-                                    "type": "string"
-                                }
-                            }
-                        }
+                    "message": {
+                        "type": "string"
                     }
                 }
             }
-            
 
 + Response 401 (application/json)
 Forbidden. Check Auth credentials.
@@ -614,7 +536,7 @@ Forbidden. Check Auth credentials.
     + Body
     
             {
-                "status": "unauthorized",
+                "code": "Unauthorized",
                 "message": "Invalid username/password"
             }
 
@@ -623,7 +545,7 @@ Forbidden. Check Auth credentials.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
                         "type": "string"
                     },
                     "message": {
@@ -633,13 +555,13 @@ Forbidden. Check Auth credentials.
             }
 
 + Response 404 (application/json)
-Not Found. Active voucher not found.
+Not Found. The voucher code was not found.
 
     + Body
     
             {
-                "status": "not found",
-                "message": "Voucher not found"
+                "code": "NotFound",
+                "message": "The voucher code was not found"
             }
             
     + Schema
@@ -647,7 +569,36 @@ Not Found. Active voucher not found.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 409 (application/json)
+Conflict. Invalid argument.
+
+    reason   | message
+    -------- | --------
+    MISSING  | Field is required
+    INVALID  | Invalid characters
+
+    + Body
+    
+            {
+                "code": "InvalidArgument",
+                "message": "{field} ({reason}): {message}"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
                         "type": "string"
                     },
                     "message": {
@@ -657,12 +608,13 @@ Not Found. Active voucher not found.
             }
 
 + Response 500 (application/json)
-Internal Server Error. Try later.
+Internal Server Error. Contact with Tikebit.
 
     + Body
     
             {
-                "status": "internal server error"
+                "code": "InternalServerError",
+                "message": "Some critical error has occurred"
             }
             
     + Schema
@@ -670,27 +622,34 @@ Internal Server Error. Try later.
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
             }
-            
+        
 + Response 503 (application/json)
 Service Unavailable. Try later.
 
     + Body
     
             {
-                "status": "service unavailable"
+                "code": "ServiceUnavailable",
+                "message": "Service temporarily unavailable"
             }
-            
+    
     + Schema
 
             {
                 "type": "object",
                 "properties": {
-                    "status": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
                         "type": "string"
                     }
                 }
