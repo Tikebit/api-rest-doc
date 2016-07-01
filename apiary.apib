@@ -1,7 +1,7 @@
 FORMAT: 1Ahttp://docs.tikebit.apiary.io/
 HOST: https://api.tikebit.com/v1
 
-# Tikebit™ - v.1
+# Tikebit™ - v1
 ![Tikebit™ Ecosystem](https://www.tikebit.com/assets/images/merchants-icon-tikebit-api-schema.svg)
 Get cryptocurrencies in thousand of retail stores!
 
@@ -21,16 +21,22 @@ Create a voucher.
 + Attributes
     + currency_iso_code: EUR (string, required)
         Only ***EUR*** is available at this moment.
-    + description: Extra info (string, required)
-        **Max length:** 250.
-    + amount: `5000` (number, required)
-    
-        **Min:** 100
         
-        **Max:** 10000
+    + amount: `5000` (number, required)
+        **Min:** 100 | **Max:** 10000
         
         The total amount of voucher. In cents.
-
+        
+    + description: `Extra info` (string, required)
+        **Max length:** 250.
+        
+        Custom description.
+        
+    + nonce: `uniqueString123` (string, required)
+        **Max length:** 250. 
+    
+        Must be allways a unique string.
+    
 + Request
     + Headers
 
@@ -40,8 +46,9 @@ Create a voucher.
         
             {
                 "currency_iso_code": "EUR",
+                "amount": 5000,
                 "description": "RetailStore: 225",
-                "amount": 5000
+                "nonce": "uniqueString123"
             }
     
     + Schema
@@ -57,6 +64,9 @@ Create a voucher.
                     },
                     "amount": {
                         "type": "number"
+                    },
+                    "nonce": {
+                        "type": "string"
                     }
                 }
             }
@@ -68,14 +78,16 @@ The voucher was created successfully.
     + Body
 
             {
+                "id": 244,
                 "serial": "7171BA",
+                "creation_timestamp": 1462470670,
+                "expiration_timestamp": 1494006670,
                 "voucher_code": "1234123412341234",
+                "currency_iso_code": "EUR",
                 "amount": 5000,
                 "balance": 5000,
                 "description": "Extra information",
-                "currency_iso_code": "EUR",
-                "creation_date": 1462470670,
-                "expiration_date": 1494006670
+                "nonce": "uniqueString123"
             }
         
     + Schema
@@ -83,10 +95,22 @@ The voucher was created successfully.
             {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "number"
+                    },
                     "serial": {
                         "type": "string"
                     },
+                    "creation_timestamp": {
+                        "type": "timestamp"
+                    },
+                    "expiration_timestamp": {
+                        "type": "timestamp"
+                    },
                     "voucher_code": {
+                        "type": "string"
+                    },
+                    "currency_iso_code": {
                         "type": "string"
                     },
                     "amount": {
@@ -98,18 +122,40 @@ The voucher was created successfully.
                     "description": {
                         "type": "string"
                     },
-                    "currency_iso_code": {
+                    "nonce": {
                         "type": "string"
-                    },
-                    "creation_date": {
-                        "type": "timestamp"
-                    },
-                    "expiration_date": {
-                        "type": "timestamp"
                     }
                 }
             }
-        
+       
++ Response 400 (application/json)
+Bad request.
+
+    Posible messages             |
+    -----------------------------|
+    The nonce was used before    |
+
+    + Body
+
+            {
+                "code": "BadRequest",
+                "message": "{message}"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
 + Response 401 (application/json)
 Forbidden. Check Auth credentials.
 
@@ -230,10 +276,33 @@ Cancel a voucher. It can only be cancelled until 10 minutes after it was created
             Authorization: Basic ABC123
 
 
-+ Response 204 (application/json)
-The voucher was cancelled successfully.
++ Response 200 (application/json)
+The voucher was cancelled successfully. You will get some details about cancellation.
 
     + Body
+
+            {
+                "id": 3,
+                "creation_timestamp": 1494006670,
+                "voucher_id": 2688
+            }
+        
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "number"
+                    },
+                    "creation_timestamp": {
+                        "type": "number"
+                    },
+                    "voucher_id": {
+                        "type": "number"
+                    }
+                }
+            }
             
 + Response 400 (application/json)
 Bad request.
@@ -407,20 +476,26 @@ Create a payment for a voucher.
 + Attributes (object)
     + voucher_code: `1234123412341234` (required, string)
         Unique 16 digits long PIN code.
+        
     + currency_iso_code: `EUR` (string, required)
         Only ***EUR*** is available at this moment.
-    + nonce: `random123` (string, required)
-        **Max length:** 250. Must be allways a unique string.
-    + description: `Extra info` (string, required)
-        **Max length:** 250.
+        
     + amount: 5000 (number, required)
-        
-        **Min:** 100
-        
-        **Max:** 10000
+        **Min:** 100 | **Max:** 10000
         
         The total amount of voucher. In cents.
-
+        
+    + description: `Extra info` (string, required)
+        **Max length:** 250.
+        
+        Custom description.
+        
+    + nonce: `uniqueString123` (string, required)
+    **Max length:** 250. 
+    
+        Must be allways a unique string.
+    
+    
 + Request
 
     + Headers
@@ -430,9 +505,10 @@ Create a payment for a voucher.
     + Body
     
             {
+                "id": 97377,
                 "voucher_code": "1234123412341234",
                 "currency_iso_code": "EUR",
-                "nonce": "random123",
+                "nonce": "uniqueString123",
                 "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
                 "amount": 100
             }
@@ -442,6 +518,9 @@ Create a payment for a voucher.
             {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "number"
+                    },
                     "voucher_code": {
                         "type": "string"
                     },
@@ -468,10 +547,10 @@ The payment was created successfully.
     
             {
                 "currency_iso_code": "EUR",
-                "nonce": "random123",
+                "nonce": "uniqueString123",
                 "amount": 100,
                 "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
-                "creation_date": 1462470876
+                "creation_timestamp": 1462470876
             }
             
     + Schema
@@ -491,7 +570,7 @@ The payment was created successfully.
                     "description": {
                         "type": "string"
                     },
-                    "creation_date": {
+                    "creation_timestamp": {
                         "type": "timestamp"
                     }
                 }
