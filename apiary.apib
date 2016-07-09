@@ -185,9 +185,11 @@ Forbidden. Check Auth credentials.
             }
         
 + Response 409 (application/json)
-Conflict. Invalid argument.
+Conflict. Invalid argument. 
+The error information will be as Object (key, value), where the key is the param name with the error and the value is an explanation of what was wrong. 
+You can get multiple errors inside the *errors* object.
 
-    reason   | message
+    type     | reason
     -------- | --------
     MISSING  | Field is required
     INVALID  | Invalid characters
@@ -195,8 +197,14 @@ Conflict. Invalid argument.
     + Body
     
             {
-                "code": "InvalidArgument",
-                "message": "{field} ({reason}): {message}"
+              "code": "InvalidArgument",
+              "message": "Validation failed",
+              "errors": {
+                "{{param}}": {
+                  "type": "{{type}}",
+                  "reason": "{{reason}}"
+                }
+              }
             }
             
     + Schema
@@ -209,6 +217,22 @@ Conflict. Invalid argument.
                     },
                     "message": {
                         "type": "string"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "properties": {
+                            "{{param}}": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -386,9 +410,11 @@ Not Found. The voucher code was not found.
             }
 
 + Response 409 (application/json)
-Conflict. Invalid argument.
+Conflict. Invalid argument. 
+The error information will be as Object (key, value), where the key is the param name with the error and the value is an explanation of what was wrong. 
+You can get multiple errors inside the *errors* object.
 
-    reason   | message
+    type     | reason
     -------- | --------
     MISSING  | Field is required
     INVALID  | Invalid characters
@@ -396,8 +422,14 @@ Conflict. Invalid argument.
     + Body
     
             {
-                "code": "InvalidArgument",
-                "message": "{field} ({reason}): {message}"
+              "code": "InvalidArgument",
+              "message": "Validation failed",
+              "errors": {
+                "{{param}}": {
+                  "type": "{{type}}",
+                  "reason": "{{reason}}"
+                }
+              }
             }
             
     + Schema
@@ -410,6 +442,22 @@ Conflict. Invalid argument.
                     },
                     "message": {
                         "type": "string"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "properties": {
+                            "{{param}}": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -658,9 +706,11 @@ Not Found. The voucher code was not found.
             }
 
 + Response 409 (application/json)
-Conflict. Invalid argument.
+Conflict. Invalid argument. 
+The error information will be as Object (key, value), where the key is the param name with the error and the value is an explanation of what was wrong. 
+You can get multiple errors inside the *errors* object.
 
-    reason   | message
+    type     | reason
     -------- | --------
     MISSING  | Field is required
     INVALID  | Invalid characters
@@ -668,8 +718,14 @@ Conflict. Invalid argument.
     + Body
     
             {
-                "code": "InvalidArgument",
-                "message": "{field} ({reason}): {message}"
+              "code": "InvalidArgument",
+              "message": "Validation failed",
+              "errors": {
+                "{{param}}": {
+                  "type": "{{type}}",
+                  "reason": "{{reason}}"
+                }
+              }
             }
             
     + Schema
@@ -682,6 +738,22 @@ Conflict. Invalid argument.
                     },
                     "message": {
                         "type": "string"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "properties": {
+                            "{{param}}": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
