@@ -27,14 +27,13 @@ Create a voucher. After the creation you need activate the voucher.
         
         The total amount of voucher. In cents.
         
-    + currency_iso_code: EUR (string, required)
+    + currency_iso_code: `EUR` (string, required)
         Only ***EUR*** is available at this moment.
         
     + reference: `Unique ID` (string)
         **Max length:** 100.
         
         Optional. If is sent, must be an unique string.
-    
         
     
 + Request
@@ -185,7 +184,6 @@ You can get multiple errors inside the *errors* object.
     -------- | --------
     MISSING  | Field is required
     INVALID  | Invalid characters
-    INVALID  | Unexpected value or invalid argument
     INVALID  | Invalid number
     INVALID  | Invalid integer
 
@@ -897,7 +895,6 @@ You can get multiple errors inside the *errors* object.
     -------- | --------
     MISSING  | Field is required
     INVALID  | Invalid characters
-    INVALID  | Unexpected value or invalid argument
     INVALID  | Invalid number
     INVALID  | Invalid integer
 
