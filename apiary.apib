@@ -10,32 +10,32 @@ Get cryptocurrencies in thousand of retail stores!
 Easy, fast, secure, private.
 
 # Group Reseller
-This methods are available for **resellers** accounts.
+Those methods are available for **resellers** accounts.
 
 ## Voucher [/reseller/voucher/]
 
+Those methods allows create a voucher (2 steps) and cancel a voucher.
+
 ### Create a voucher [POST]
 
-Create a voucher.
+Create a voucher. After the creation you need activate the voucher.
+**CAUTION:** If you don't activate the voucher, the voucher not will be usable.
 
 + Attributes
-    + currency_iso_code: EUR (string, required)
-        Only ***EUR*** is available at this moment.
-        
     + amount: `5000` (number, required)
         **Min:** 100 | **Max:** 10000
         
         The total amount of voucher. In cents.
         
-    + description: `Extra info` (string, required)
-        **Max length:** 250.
+    + currency_iso_code: EUR (string, required)
+        Only ***EUR*** is available at this moment.
         
-        Custom description.
+    + reference: `Unique ID` (string)
+        **Max length:** 100.
         
-    + nonce: `uniqueString123` (string, required)
-        **Max length:** 250. 
+        Optional. If is sent, must be an unique string.
     
-        Must be allways a unique string.
+        
     
 + Request
     + Headers
@@ -45,10 +45,9 @@ Create a voucher.
     + Body
         
             {
-                "currency_iso_code": "EUR",
                 "amount": 5000,
-                "description": "RetailStore: 225",
-                "nonce": "uniqueString123"
+                "currency_iso_code": "EUR",
+                "reference": "MyCustomAndInternalID"
             }
     
     + Schema
@@ -56,16 +55,13 @@ Create a voucher.
             {
                 "type": "object",
                 "properties": {
-                    "currency_iso_code": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
                     "amount": {
                         "type": "number"
                     },
-                    "nonce": {
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
                         "type": "string"
                     }
                 }
@@ -78,16 +74,15 @@ The voucher was created successfully.
     + Body
 
             {
-                "id": 244,
+                "id": "3a480a17-de11-4432-b2c9-b3d06c27baa18",
                 "serial": "7171BA",
                 "creation_timestamp": 1462470670,
                 "expiration_timestamp": 1494006670,
                 "voucher_code": "1234123412341234",
-                "currency_iso_code": "EUR",
                 "amount": 5000,
                 "balance": 5000,
-                "description": "Extra information",
-                "nonce": "uniqueString123"
+                "currency_iso_code": "EUR",
+                "reference": "MyCustomAndInternalID"
             }
         
     + Schema
@@ -96,7 +91,7 @@ The voucher was created successfully.
                 "type": "object",
                 "properties": {
                     "id": {
-                        "type": "number"
+                        "type": "string"
                     },
                     "serial": {
                         "type": "string"
@@ -110,19 +105,16 @@ The voucher was created successfully.
                     "voucher_code": {
                         "type": "string"
                     },
-                    "currency_iso_code": {
-                        "type": "string"
-                    },
                     "amount": {
                         "type": "number"
                     },
                     "balance": {
                         "type": "number"
                     },
-                    "description": {
+                    "currency_iso_code": {
                         "type": "string"
                     },
-                    "nonce": {
+                    "reference": {
                         "type": "string"
                     }
                 }
@@ -133,7 +125,7 @@ Bad request.
 
     Posible messages             |
     -----------------------------|
-    The nonce was used before    |
+    The voucher reference was already used    |
 
     + Body
 
@@ -271,7 +263,7 @@ Service Unavailable. Try later.
     
             {
                 "code": "ServiceUnavailable",
-                "message": "Service temporarily unavailable"
+                "message": "Service temporarily unavailable, please try again in few minutes"
             }
     
     + Schema
@@ -287,11 +279,195 @@ Service Unavailable. Try later.
                     }
                 }
             }
+
+### Activate a voucher [POST /{voucher_id}/]
+
+Activate a created voucher. After a voucher is created you need use this method for activate it to be it ready for use.
         
++ Parameters
+    + voucher_id (required, string) ... Unique 36 hexadecimal long string.
+    
++ Request
+    + Headers
 
-### Cancel a voucher [DELETE /reseller/voucher/{voucher_code}/]
+            Authorization: Basic ABC123
 
-Cancel a voucher. It can only be cancelled until 10 minutes after it was created. It is useful when a merchant creates a wrong voucher and he wants to cancel it immediately.
+
++ Response 201 (application/json)
+The voucher was activated successfully.
+
+    + Body
+
+            {
+                "activated": true
+            }
+        
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "activated": {
+                        "type": "boolean"
+                    }
+                }
+            }
+
++ Response 401 (application/json)
+Forbidden. Check Auth credentials.
+
+    + Headers
+
+            WWW-Authenticate: Basic realm="reseller"
+
+    + Body
+    
+            {
+                "code": "Unauthorized",
+                "message": "Invalid username/password"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+            
++ Response 404 (application/json)
+Not Found. The voucher code was not found.
+
+    + Body
+    
+            {
+                "code": "NotFound",
+                "message": "The voucher was not found"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
++ Response 409 (application/json)
+Conflict. Invalid argument. 
+The error information will be as Object (key, value), where the key is the param name with the error and the value is an explanation of what was wrong. 
+You can get multiple errors inside the *errors* object.
+
+    type     | reason
+    -------- | --------
+    MISSING  | Field is required
+
+    + Body
+    
+            {
+              "code": "InvalidArgument",
+              "message": "Validation failed",
+              "errors": {
+                "{{param}}": {
+                  "type": "{{type}}",
+                  "reason": "{{reason}}"
+                }
+              }
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "object",
+                        "properties": {
+                            "{{param}}": {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string"
+                                    },
+                                    "reason": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        
++ Response 500 (application/json)
+Internal Server Error. Contact with Tikebit.
+
+    + Body
+    
+            {
+                "code": "InternalServerError",
+                "message": "Some critical error has occurred"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        
++ Response 503 (application/json)
+Service Unavailable. Try later.
+
+    + Body
+    
+            {
+                "code": "ServiceUnavailable",
+                "message": "Service temporarily unavailable, please try again in few minutes"
+            }
+    
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
+### Cancel a voucher [DELETE /{voucher_code}/]
+
+Cancel a voucher. It can only be cancelled until 60 minutes after it was created. It is useful when a merchant creates a wrong voucher and he wants to cancel it immediately.
 
 + Parameters
     + voucher_code (required, string) ... Unique 16 digits long PIN code.
@@ -309,9 +485,9 @@ The voucher was cancelled successfully. You will get some details about cancella
     + Body
 
             {
-                "id": 3,
+                "id": "1c201e5f-519e-4035-86f8-231547cfc4a8",
                 "creation_timestamp": 1494006670,
-                "voucher_id": 2688
+                "voucher_id": "13201ecd-509e-4015-86c8-211547cfc4a8"
             }
         
     + Schema
@@ -323,7 +499,7 @@ The voucher was cancelled successfully. You will get some details about cancella
                         "type": "number"
                     },
                     "creation_timestamp": {
-                        "type": "number"
+                        "type": "timestamp"
                     },
                     "voucher_id": {
                         "type": "number"
@@ -336,7 +512,9 @@ Bad request.
 
     Posible messages            |
     --------------------------- |
+    The voucher is not activated    |
     The voucher was used        |
+    The voucher was already cancelled    |
     
    
     + Body
@@ -419,11 +597,7 @@ You can get multiple errors inside the *errors* object.
 
     type     | reason
     -------- | --------
-    MISSING  | Field is required
     INVALID  | Invalid characters
-    INVALID  | Unexpected value or invalid argument
-    INVALID  | Invalid number
-    INVALID  | Invalid integer
 
     + Body
     
@@ -499,7 +673,7 @@ Service Unavailable. Try later.
     
             {
                 "code": "ServiceUnavailable",
-                "message": "Service temporarily unavailable"
+                "message": "Service temporarily unavailable, please try again in few minutes"
             }
     
     + Schema
@@ -518,37 +692,39 @@ Service Unavailable. Try later.
 
 
 # Group Merchant
-This methods are available for **merchant** accounts.
+Those methods are available for **merchant** accounts.
 
 ## Payment [/merchant/payment/]
 
+Those methods allows create a payment (2 steps).
+
 ### Create a payment [POST]
 
-Create a payment for a voucher.
+Create a payment for a voucher. After the creation you need activate the voucher.
+**CAUTION:** If you don't activate the payment, the amount not will be spent.
 
 
 + Attributes (object)
     + voucher_code: `1234123412341234` (required, string)
         Unique 16 digits long PIN code.
         
-    + currency_iso_code: `EUR` (string, required)
-        Only ***EUR*** is available at this moment.
-        
     + amount: 5000 (number, required)
         **Min:** 100 | **Max:** 10000
         
         The total amount of voucher. In cents.
+    
+    + currency_iso_code: `EUR` (string, required)
+        Only ***EUR*** is available at this moment.
         
-    + description: `Extra info` (string, required)
+    + reference: `Unique ID` (string)
+        **Max length:** 100.
+        
+        Optional. If is sent, must be an unique string.
+    
+    + description: `Extra info` (string)
         **Max length:** 250.
         
-        Custom description.
-        
-    + nonce: `uniqueString123` (string, required)
-    **Max length:** 250. 
-    
-        Must be allways a unique string.
-    
+        Optional. Custom description.
     
 + Request
 
@@ -559,12 +735,11 @@ Create a payment for a voucher.
     + Body
     
             {
-                "id": 97377,
-                "voucher_code": "1234123412341234",
+                "voucher_code": "1feb35d1-9ead-4cf6-b681-76d630367f90",
+                "amount": 100,
                 "currency_iso_code": "EUR",
-                "nonce": "uniqueString123",
-                "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
-                "amount": 100
+                "reference": "MyCustomAndInternalID",
+                "description": "Bit2Me.com - 1€ in bitcoins: REF445588"
             }
         
     + Schema
@@ -572,23 +747,20 @@ Create a payment for a voucher.
             {
                 "type": "object",
                 "properties": {
-                    "id": {
-                        "type": "number"
-                    },
                     "voucher_code": {
-                        "type": "string"
-                    },
-                    "currency_iso_code": {
-                        "type": "string"
-                    },
-                    "nonce": {
-                        "type": "string"
-                    },
-                    "description": {
                         "type": "string"
                     },
                     "amount": {
                         "type": "number"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
                     }
                 }
             }        
@@ -600,11 +772,12 @@ The payment was created successfully.
     + Body
     
             {
-                "currency_iso_code": "EUR",
-                "nonce": "uniqueString123",
-                "amount": 100,
-                "description": "Bit2Me.com - 1€ in bitcoins: REF445588",
+                "id": "1feb35d1-9ead-4cf6-b681-76d630367f90",
                 "creation_timestamp": 1462470876
+                "amount": 100,
+                "currency_iso_code": "EUR",
+                "reference": "MyCustomAndInternalID",
+                "description": "Bit2Me.com - 1€ in bitcoins: REF445588"
             }
             
     + Schema
@@ -612,20 +785,23 @@ The payment was created successfully.
             {
                 "type": "object",
                 "properties": {
-                    "currency_iso_code": {
-                        "type": "string"
-                    },
-                    "nonce": {
-                        "type": "string"
-                    },
-                    "amount": {
-                        "type": "number"
-                    },
-                    "description": {
+                    "id": {
                         "type": "string"
                     },
                     "creation_timestamp": {
                         "type": "timestamp"
+                    },
+                    "amount": {
+                        "type": "number"
+                    },
+                    "currency_iso_code": {
+                        "type": "string"
+                    },
+                    "reference": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
                     }
                 }
             }
@@ -635,7 +811,8 @@ Bad request.
 
     Posible messages             |
     -----------------------------|
-    The nonce was used before    |
+    The voucher is not activated        |        
+    The payment reference was already used    |
     Not enough voucher balance   | 
    
     + Body
@@ -798,7 +975,142 @@ Service Unavailable. Try later.
     
             {
                 "code": "ServiceUnavailable",
-                "message": "Service temporarily unavailable"
+                "message": "Service temporarily unavailable, please try again in few minutes"
+            }
+    
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+            
+### Activate a payment [POST /{payment_id}/]
+
+Activate a created payment. After a payment is created you need use this method for activate it to be it ready for count as used.
+
+        
++ Parameters
+    + payment_id (required, string) ... Unique 36 hexadecimal long string.
+    
++ Request
+    + Headers
+
+            Authorization: Basic ABC123
+
+
++ Response 201 (application/json)
+The payment was activated successfully.
+
+    + Body
+
+            {
+                "activated": true
+            }
+        
+    + Schema
+    
+            {
+                "type": "object",
+                "properties": {
+                    "activated": {
+                        "type": "boolean"
+                    }
+                }
+            }
+
++ Response 401 (application/json)
+Forbidden. Check Auth credentials.
+
+    + Headers
+
+            WWW-Authenticate: Basic realm="reseller"
+
+    + Body
+    
+            {
+                "code": "Unauthorized",
+                "message": "Invalid username/password"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+            
++ Response 404 (application/json)
+Not Found. The payment was not found.
+
+    + Body
+    
+            {
+                "code": "NotFound",
+                "message": "The payment was not found"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+
+        
++ Response 500 (application/json)
+Internal Server Error. Contact with Tikebit.
+
+    + Body
+    
+            {
+                "code": "InternalServerError",
+                "message": "Some critical error has occurred"
+            }
+            
+    + Schema
+
+            {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        
++ Response 503 (application/json)
+Service Unavailable. Try later.
+
+    + Body
+    
+            {
+                "code": "ServiceUnavailable",
+                "message": "Service temporarily unavailable, please try again in few minutes"
             }
     
     + Schema
