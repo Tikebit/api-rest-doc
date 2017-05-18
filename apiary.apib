@@ -12,11 +12,11 @@ Easy, fast, secure, private.
 # Group Reseller
 Those methods are available for **resellers** accounts.
 
-## Voucher [/reseller/voucher/]
+## Voucher
 
 Those methods allows create a voucher (2 steps) and cancel a voucher.
 
-### Create a voucher [POST]
+### Create a voucher [POST /reseller/voucher/]
 
 Create a voucher. After the creation you need activate the voucher.
 **CAUTION:** If you don't activate the voucher, the voucher not will be usable.
@@ -278,7 +278,7 @@ Service Unavailable. Try later.
                 }
             }
 
-### Activate a voucher [POST /{voucher_id}/]
+### Activate a voucher [POST /reseller/voucher/{voucher_id}/]
 
 Activate a created voucher. After a voucher is created you need use this method for activate it to be it ready for use.
         
@@ -463,7 +463,7 @@ Service Unavailable. Try later.
                 }
             }
 
-### Cancel a voucher [DELETE /{voucher_code}/]
+### Cancel a voucher [DELETE /reseller/voucher/{voucher_code}/]
 
 Cancel a voucher. It can only be cancelled until 60 minutes after it was created. It is useful when a merchant creates a wrong voucher and he wants to cancel it immediately.
 
@@ -692,11 +692,11 @@ Service Unavailable. Try later.
 # Group Merchant
 Those methods are available for **merchant** accounts.
 
-## Payment [/merchant/payment/]
+## Payment
 
 Those methods allows create a payment (2 steps).
 
-### Create a payment [POST]
+### Create a payment [POST /merchant/payment/]
 
 Create a payment for a voucher. After the creation you need activate the voucher.
 **CAUTION:** If you don't activate the payment, the amount not will be spent.
@@ -989,7 +989,7 @@ Service Unavailable. Try later.
                 }
             }
             
-### Activate a payment [POST /{payment_id}/]
+### Activate a payment [POST /merchant/payment/{payment_id}/]
 
 Activate a created payment. After a payment is created you need use this method for activate it to be it ready for count as used.
 
